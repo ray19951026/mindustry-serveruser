@@ -18,7 +18,7 @@ Public Class Form1
         udpClient.Send(sendBytes, sendBytes.Length, ipEndPoint)
     End Sub
 
-    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles gameover.Click
         sendBytes = Encoding.ASCII.GetBytes("gameover")
         udpClient.Send(sendBytes, sendBytes.Length, ipEndPoint)
     End Sub
@@ -96,4 +96,55 @@ Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
     End Sub
+
+    Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
+        sendBytes = Encoding.ASCII.GetBytes(TextBox4.Text)
+        udpClient.Send(sendBytes, sendBytes.Length, ipEndPoint)
+    End Sub
+
+    Private Sub Button9_Click(sender As Object, e As EventArgs) Handles runwave.Click
+        sendBytes = Encoding.ASCII.GetBytes("runwave")
+        udpClient.Send(sendBytes, sendBytes.Length, ipEndPoint)
+    End Sub
+    Dim tim1
+    Private Sub Timer2_Tick(sender As Object, e As EventArgs) Handles Timer2.Tick
+        If tim1 >= TextBox5.Text Then
+            tim1 = 0
+            sendBytes = Encoding.ASCII.GetBytes("runwave")
+            udpClient.Send(sendBytes, sendBytes.Length, ipEndPoint)
+        Else
+            tim1 += 1
+            Label5.Text = CStr(TextBox5.Text - tim1) + "/" + CStr(TextBox5.Text)
+
+        End If
+
+    End Sub
+
+    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox1.CheckedChanged
+        If CheckBox1.Checked Then
+            If TextBox5.Text = "" Then
+                TextBox5.Text = 10
+            End If
+            TextBox5.ReadOnly = True
+            Label5.ForeColor = Color.Green
+            tim1 = 0
+            Label5.Text = CStr(TextBox5.Text - tim1) + "/" + CStr(TextBox5.Text)
+            Timer2.Enabled = True
+        Else
+            TextBox5.ReadOnly = False
+            Timer2.Enabled = False
+            Label5.Text = "stop"
+            Label5.ForeColor = Color.Red
+        End If
+    End Sub
+
+    Private Sub TextBox5_TextChanged(sender As Object, e As System.Windows.Forms.KeyPressEventArgs) Handles TextBox5.KeyPress
+        If Char.IsDigit(e.KeyChar) Or e.KeyChar = Chr(8) Then
+            e.Handled = False
+        Else
+            e.Handled = True
+        End If
+    End Sub
+
+
 End Class
